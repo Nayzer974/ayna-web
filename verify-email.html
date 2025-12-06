@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification Email - AYNA</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="https://ayna.app/logo.png">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">✨</div>
+        <h1>Vérification Email</h1>
+        
+        <div id="status" class="status loading">
+            <div>
+                <div class="spinner"></div>
+                <p>Vérification en cours...</p>
+            </div>
+        </div>
+
+        <div id="successContent" class="hidden">
+            <div class="icon success">✓</div>
+            <p>Votre email a été vérifié avec succès !</p>
+            <p style="margin-top: 12px; font-size: 14px; opacity: 0.8;">
+                Vous allez être redirigé vers l'application...
+            </p>
+        </div>
+
+        <div id="errorContent" class="hidden">
+            <div class="icon error">✗</div>
+            <p id="errorMessage">Une erreur est survenue lors de la vérification.</p>
+            <button class="button" onclick="retryVerification()">Réessayer</button>
+            <a href="ayna://" class="link">Ouvrir l'application</a>
+        </div>
+
+        <p class="info">
+            La vérification est effectuée de manière sécurisée via notre serveur.
+        </p>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Configuration Supabase Edge Function
+        const SUPABASE_URL = 'https://ctupecolapegiogvmwxz.supabase.co';
+        const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/verify-email`;
+
+        // Récupérer les paramètres depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token') || urlParams.get('code');
+        const tokenHash = urlParams.get('token_hash');
+        const typeHash = urlParams.get('type_hash');
+        const type = urlParams.get('type') || 'signup';
+
+        async function verifyEmail() {
+            const statusDiv = document.getElementById('status');
+            const successDiv = document.getElementById('successContent');
+            const errorDiv = document.getElementById('errorContent');
+
+            if (!token && !tokenHash) {
+                showError('Aucun token de vérification trouvé dans l\'URL.');
+                return;
+            }
+
+            try {
+                // Appeler l'Edge Function Supabase (sécurisé)
+                const response = await fetch(EDGE_FUNCTION_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: token,
+                        token_hash: tokenHash,
+                        type: type,
+                        type_hash: typeHash
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showSuccess();
+                } else {
+                    throw new Error(data.error || 'Erreur lors de la vérification');
+                }
+
+            } catch (error) {
+                console.error('Erreur vérification:', error);
+                showError(error.message || 'Une erreur est survenue lors de la vérification.');
+            }
+        }
+
+        function showSuccess() {
+            const statusDiv = document.getElementById('status');
+            const successDiv = document.getElementById('successContent');
+            const errorDiv = document.getElementById('errorContent');
+
+            statusDiv.classList.add('hidden');
+            errorDiv.classList.add('hidden');
+            successDiv.classList.remove('hidden');
+
+            // Rediriger vers l'application mobile après 2 secondes
+            setTimeout(() => {
+                window.location.href = 'ayna://email-verified';
+                setTimeout(() => {
+                    window.location.href = 'https://ayna.app';
+                }, 1000);
+            }, 2000);
+        }
+
+        function showError(message) {
+            const statusDiv = document.getElementById('status');
+            const successDiv = document.getElementById('successContent');
+            const errorDiv = document.getElementById('errorContent');
+            const errorMessage = document.getElementById('errorMessage');
+
+            statusDiv.classList.add('hidden');
+            successDiv.classList.add('hidden');
+            errorDiv.classList.remove('hidden');
+            errorMessage.textContent = message;
+        }
+
+        function retryVerification() {
+            const statusDiv = document.getElementById('status');
+            const successDiv = document.getElementById('successContent');
+            const errorDiv = document.getElementById('errorContent');
+
+            statusDiv.classList.remove('hidden');
+            successDiv.classList.add('hidden');
+            errorDiv.classList.add('hidden');
+
+            verifyEmail();
+        }
+
+        // Démarrer la vérification au chargement de la page
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', verifyEmail);
+        } else {
+            verifyEmail();
+        }
+    </script>
+</body>
+</html>
+
