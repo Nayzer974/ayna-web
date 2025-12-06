@@ -45,12 +45,15 @@
         const SUPABASE_URL = 'https://ctupecolapegiogvmwxz.supabase.co';
         const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/verify-email`;
 
-        // Récupérer les paramètres depuis l'URL
+        // Récupérer les paramètres depuis l'URL (query string et hash)
         const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token') || urlParams.get('code');
-        const tokenHash = urlParams.get('token_hash');
-        const typeHash = urlParams.get('type_hash');
-        const type = urlParams.get('type') || 'signup';
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        
+        // Essayer d'abord dans la query string, puis dans le hash
+        const token = urlParams.get('token') || urlParams.get('code') || hashParams.get('token') || hashParams.get('code');
+        const tokenHash = urlParams.get('token_hash') || hashParams.get('token_hash');
+        const typeHash = urlParams.get('type_hash') || hashParams.get('type_hash');
+        const type = urlParams.get('type') || hashParams.get('type') || 'signup';
 
         async function verifyEmail() {
             const statusDiv = document.getElementById('status');
