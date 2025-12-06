@@ -1,27 +1,9 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "**/*.html",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/verify-email.html",
-      "dest": "/verify-email.html"
-    },
-    {
-      "src": "/reset-password.html",
-      "dest": "/reset-password.html"
-    },
-    {
-      "src": "/",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/oauth/consent",
-      "dest": "/verify-email.html"
+      "source": "/oauth/consent",
+      "destination": "/verify-email.html"
     }
   ],
   "headers": [
