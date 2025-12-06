@@ -25,43 +25,46 @@
             const urlParams = new URLSearchParams(window.location.search);
             const hashParams = new URLSearchParams(window.location.hash.substring(1));
             
-            // Essayer d'abord dans la query string, puis dans le hash
+            // Supabase utilise access_token dans le hash pour les liens de réinitialisation
+            const accessToken = hashParams.get('access_token') || urlParams.get('access_token');
             const token = urlParams.get('token') || urlParams.get('code') || hashParams.get('token') || hashParams.get('code');
             const tokenHash = urlParams.get('token_hash') || hashParams.get('token_hash');
             const type = urlParams.get('type') || hashParams.get('type');
             const typeHash = urlParams.get('type_hash') || hashParams.get('type_hash');
             
             // Si on a des paramètres de réinitialisation de mot de passe
-            if ((token || tokenHash) && (type === 'recovery' || typeHash === 'recovery' || window.location.hash.includes('type=recovery'))) {
-                // Rediriger vers reset-password.html en préservant les paramètres
-                const params = new URLSearchParams();
-                if (token) params.set('token', token);
-                if (tokenHash) params.set('token_hash', tokenHash);
-                if (type) params.set('type', type);
-                if (typeHash) params.set('type_hash', typeHash);
-                
-                // Si les paramètres sont dans le hash, les préserver
-                if (window.location.hash && window.location.hash.includes('token')) {
+            // Supabase envoie type=recovery dans le hash avec access_token
+            if ((accessToken || token || tokenHash) && 
+                (type === 'recovery' || typeHash === 'recovery' || 
+                 window.location.hash.includes('type=recovery') ||
+                 window.location.hash.includes('access_token'))) {
+                // Rediriger vers reset-password.html en préservant TOUT le hash
+                if (window.location.hash) {
                     window.location.href = `reset-password.html${window.location.hash}`;
                 } else {
+                    const params = new URLSearchParams();
+                    if (token) params.set('token', token);
+                    if (accessToken) params.set('access_token', accessToken);
+                    if (tokenHash) params.set('token_hash', tokenHash);
+                    if (type) params.set('type', type);
+                    if (typeHash) params.set('type_hash', typeHash);
                     window.location.href = `reset-password.html?${params.toString()}`;
                 }
                 return;
             }
 
             // Si on a des paramètres de vérification d'email
-            if (token || tokenHash) {
+            if (accessToken || token || tokenHash) {
                 // Rediriger vers verify-email.html en préservant les paramètres
-                const params = new URLSearchParams();
-                if (token) params.set('token', token);
-                if (tokenHash) params.set('token_hash', tokenHash);
-                if (type) params.set('type', type);
-                if (typeHash) params.set('type_hash', typeHash);
-                
-                // Si les paramètres sont dans le hash, les préserver
-                if (window.location.hash && window.location.hash.includes('token')) {
+                if (window.location.hash) {
                     window.location.href = `verify-email.html${window.location.hash}`;
                 } else {
+                    const params = new URLSearchParams();
+                    if (token) params.set('token', token);
+                    if (accessToken) params.set('access_token', accessToken);
+                    if (tokenHash) params.set('token_hash', tokenHash);
+                    if (type) params.set('type', type);
+                    if (typeHash) params.set('type_hash', typeHash);
                     window.location.href = `verify-email.html?${params.toString()}`;
                 }
                 return;
