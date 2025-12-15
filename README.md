@@ -6,14 +6,32 @@ Site web statique pour la vérification d'email et la réinitialisation de mot d
 
 ```
 web/
-├── index.html              # Page d'accueil
-├── verify-email.html       # Page de vérification d'email
-├── reset-password.html     # Page de réinitialisation mot de passe
-├── styles.css              # Styles CSS communs
-├── auth.js                 # Utilitaires JavaScript communs
-├── vercel.json            # Configuration Vercel
-└── README.md              # Documentation
+├── index.html                    # Page d'accueil
+├── verify-email.html             # Page de vérification d'email
+├── reset-password.html           # Page de réinitialisation mot de passe
+├── privacy-policy.html           # Politique de confidentialité (FR)
+├── privacy-policy-en.html        # Privacy Policy (EN)
+├── terms.html                    # Conditions d'utilisation (FR)
+├── terms-en.html                 # Terms & Conditions (EN)
+├── styles.css                    # Styles CSS communs
+├── auth.js                       # Utilitaires JavaScript communs
+├── vercel.json                   # Configuration Vercel
+└── README.md                     # Documentation
 ```
+
+## 📋 Fichiers de Conformité
+
+Ce dépôt inclut les documents légaux requis pour la conformité GDPR et les stores:
+
+- **Privacy Policy** (`privacy-policy.html` / `privacy-policy-en.html`)
+  - Politique de confidentialité complète
+  - Conforme GDPR
+  - Accessible depuis l'app et les stores
+
+- **Terms & Conditions** (`terms.html` / `terms-en.html`)
+  - Conditions générales d'utilisation
+  - Responsabilités et limitations
+  - Contenu spirituel (non médical, non thérapeutique)
 
 ## 🚀 Déploiement sur Vercel
 
