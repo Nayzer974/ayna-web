@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement Annulé - AYNA</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="https://www.nurayna.com/logo.png">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">✨</div>
+        <h1>Paiement Annulé</h1>
+        
+        <div id="cancelContent">
+            <div class="icon error" style="color: #FFD369;">⚠</div>
+            <p style="font-size: 18px; margin-top: 20px; color: #FFD369;">
+                Votre paiement a été annulé
+            </p>
+            <p style="margin-top: 12px; font-size: 14px; opacity: 0.8;">
+                Aucun paiement n'a été effectué. Vous pouvez réessayer à tout moment.
+            </p>
+            
+            <div style="margin-top: 30px; padding: 20px; background: rgba(255, 211, 105, 0.1); border-radius: 12px; border: 1px solid rgba(255, 211, 105, 0.3);">
+                <p style="font-size: 14px; margin-bottom: 10px; color: #FFD369;">
+                    <strong>Que souhaitez-vous faire ?</strong>
+                </p>
+                <ul style="text-align: left; font-size: 14px; line-height: 1.8; opacity: 0.9;">
+                    <li>Retourner dans l'application pour réessayer</li>
+                    <li>Consulter nos tarifs et fonctionnalités</li>
+                    <li>Nous contacter pour toute question</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 30px; display: flex; flex-direction: column; gap: 15px;">
+                <a href="ayna://subscription-cancel" class="button" style="text-decoration: none; display: inline-block;">
+                    Retourner dans l'application
+                </a>
+                <a href="https://www.nurayna.com" class="link" style="font-size: 14px;">
+                    Retour au site web
+                </a>
+            </div>
+        </div>
+
+        <p class="info" style="margin-top: 40px;">
+            Si vous avez des questions ou besoin d'aide, n'hésitez pas à nous contacter.
+        </p>
+    </div>
+
+    <script>
+        // Essayer d'ouvrir l'application automatiquement après 3 secondes
+        setTimeout(() => {
+            window.location.href = 'ayna://subscription-cancel';
+            // Fallback vers le site web si l'app n'est pas installée
+            setTimeout(() => {
+                window.location.href = 'https://www.nurayna.com';
+            }, 2000);
+        }, 3000);
+    </script>
+</body>
+</html>
+
